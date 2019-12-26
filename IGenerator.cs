@@ -8,6 +8,8 @@ namespace Synthesizer
 {
 	public interface IGenerator
 	{
-		Clip Generate(int sampleCount);
+		void Reset();
+		IGenerator Clone();
+		void Generate(Clip output);
 	}
 }

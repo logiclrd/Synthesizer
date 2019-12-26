@@ -9,20 +9,30 @@ namespace Synthesizer
 {
 	public class Clip : INotifyChanged
 	{
-		public double[] Samples;
+		public float[] Samples;
+
+		public int SampleCount => Samples.Length;
 
 		public Clip()
 		{
 		}
 
-		public Clip(double[] samples)
+		public Clip(int numSamples)
+		{
+			Samples = new float[numSamples];
+		}
+
+		public Clip(float[] samples)
 		{
 			Samples = samples;
 		}
 
+		public static Clip SameSizeAs(Clip output)
+			=> new Clip(output.SampleCount);
+
 		public event EventHandler Changed;
 
-		public void WriteSamples(int start, double[] newSamples)
+		public void WriteSamples(int start, float[] newSamples)
 		{
 			if (Samples.Length < start + newSamples.Length)
 				Array.Resize(ref Samples, start + newSamples.Length);
@@ -32,6 +42,9 @@ namespace Synthesizer
 			Changed?.Invoke(this, EventArgs.Empty);
 		}
 
-		public IWaveProvider GetWaveProvider() => new ClipWaveProvider(this);
-	}
+		public void Clear()
+		{
+			Array.Clear(Samples, 0, Samples.Length);
+		}
+    }
 }

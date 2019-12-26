@@ -11,7 +11,23 @@ namespace Synthesizer
 		public IGenerator First;
 		public IGenerator Second;
 
-		public Clip Generate(int sampleCount)
+		public void Reset()
+		{
+			First?.Reset();
+			Second?.Reset();
+		}
+
+		public IGenerator Clone()
+		{
+			return
+				new ConvolutionGenerator()
+				{
+					First = First.Clone(),
+					Second = Second.Clone(),
+				};
+		}
+
+		public void Generate(Clip output)
 		{
 			// A "convolution" is what you get when you have two sets of numbers that are of the same size,
 			// and you go through them pairing up the numbers, multiplying each pair together, to make a
@@ -24,18 +40,13 @@ namespace Synthesizer
 			//         2 * 5 = 10,     <-- second number from each group
 			//         3 * 6 = 18      <-- third number from each group
 
-			var firstClip = First.Generate(sampleCount);
-			var secondClip = Second.Generate(sampleCount);
+			var buffer = Clip.SameSizeAs(output);
 
-			// We could make a place to put the samples, do the calculations, and then throw away firstClip
-			// and secondClip (nobody else would ever see them), but we can help the program run faster by
-			// reusing one of the clips as the output of the multiplications. So, as we go through the clips,
-			// we actually edit firstClip to have the result, and then firstClip becomes the overall result.
+			First.Generate(output);
+			Second.Generate(buffer);
 
-			for (int i = 0; i < firstClip.Samples.Length; i++)
-				firstClip.Samples[i] = firstClip.Samples[i] * secondClip.Samples[i];
-
-			return firstClip;
+			for (int i = 0; i < output.SampleCount; i++)
+				output.Samples[i] = output.Samples[i] * buffer.Samples[i];
 		}
 	}
 }

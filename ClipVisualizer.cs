@@ -14,8 +14,8 @@ namespace Synthesizer
 	{
 		Clip _clip;
 		int? _lastKnownClipLength;
-		double _samplesPerPixelX = 100;
-		double _scaleY = 100;
+		float _samplesPerPixelX = 100;
+		float _scaleY = 100;
 		int? _selectionStartIndex = null;
 		int? _selectionEndIndex = null;
 
@@ -41,7 +41,7 @@ namespace Synthesizer
 			}
 		}
 
-		public double SamplesPerPixelX
+		public float SamplesPerPixelX
 		{
 			get => _samplesPerPixelX;
 			set
@@ -51,7 +51,7 @@ namespace Synthesizer
 			}
 		}
 
-		public double ScaleY
+		public float ScaleY
 		{
 			get => _scaleY;
 			set

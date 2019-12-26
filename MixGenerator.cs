@@ -8,18 +8,34 @@ namespace Synthesizer
 	{
 		public List<IGenerator> Inputs = new List<IGenerator>();
 
-		public Clip Generate(int sampleCount)
+		public void Reset()
 		{
-			var clips = Inputs.Select(input => input.Generate(sampleCount)).ToList();
+			Inputs.ForEach(input => input.Reset());
+		}
 
-			// We mix everything into the first clip we got and then just return that clip.
-			for (int clipIndex = 1; clipIndex < clips.Count; clipIndex++)
+		public IGenerator Clone()
+		{
+			var clone = new MixGenerator();
+
+			foreach (var input in Inputs)
+				clone.Inputs.Add(input.Clone());
+
+			return clone;
+		}
+
+		public void Generate(Clip output)
+		{
+			var buffer = Clip.SameSizeAs(output);
+
+			output.Clear();
+
+			foreach (var input in Inputs)
 			{
-				for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
-					clips[0].Samples[sampleIndex] += clips[clipIndex].Samples[sampleIndex];
-			}
+				input.Generate(buffer);
 
-			return clips[0];
+				for (int sampleIndex = 0; sampleIndex < output.SampleCount; sampleIndex++)
+					output.Samples[sampleIndex] += buffer.Samples[sampleIndex];
+			}
 		}
 	}
 }

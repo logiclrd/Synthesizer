@@ -6,6 +6,8 @@ namespace Synthesizer
 	{
 		public const int ABelowMiddleC = 440;
 
+		public const double MiddleC = ABelowMiddleC * SemitoneRatio * SemitoneRatio * SemitoneRatio * SemitoneRatio;
+
 		// This here is the number that when you multiply it by itself 12 times, the result is 2. This is equivalent
 		// to saying that if you go up 12 semitones, you've doubled your frequency, which itself means that you've
 		// gone up one octave.

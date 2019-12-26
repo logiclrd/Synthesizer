@@ -10,18 +10,35 @@ namespace Synthesizer
 	{
 		public double Frequency;
 
-		public Clip Generate(int sampleCount)
-		{
-			var samples = new double[sampleCount];
+		double _sinePhase = 0.0;
 
+		public void Reset()
+		{
+			_sinePhase = 0;
+		}
+
+		public IGenerator Clone()
+		{
+			return
+				new SineWaveGenerator()
+				{
+					Frequency = Frequency,
+
+					_sinePhase = _sinePhase,
+				};
+		}
+
+		public void Generate(Clip output)
+		{
 			double samplesPerSineWavePeriod = Global.SampleRate / Frequency;
 
-			double indexMultiplier = Math.PI * 2 / samplesPerSineWavePeriod;
+			double phaseChangePerSample = Math.PI * 2 / samplesPerSineWavePeriod;
 
-			for (int i = 0; i < samples.Length; i++)
-				samples[i] = Math.Cos(i * indexMultiplier);
-
-			return new Clip(samples);
+			for (int i = 0; i < output.SampleCount; i++)
+			{
+				output.Samples[i] = (float)Math.Sin(_sinePhase);
+				_sinePhase += phaseChangePerSample;
+			}
 		}
 	}
 }

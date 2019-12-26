@@ -8,12 +8,28 @@ namespace Synthesizer
 {
 	public class TriangleWaveGenerator : IGenerator
 	{
-		public double Frequency;
+		public float Frequency;
 
-		public Clip Generate(int sampleCount)
+		float _sampleValue = 0;
+
+		public void Reset()
 		{
-			var samples = new double[sampleCount];
-			
+			_sampleValue = 0;
+		}
+
+		public IGenerator Clone()
+		{
+			return
+				new TriangleWaveGenerator()
+				{
+					Frequency = Frequency,
+
+					_sampleValue = _sampleValue,
+				};
+		}
+
+		public void Generate(Clip output)
+		{
 			// This generates a wave like this:
 			//
 			//    /\    /\    /\    /\
@@ -40,28 +56,24 @@ namespace Synthesizer
 			// 4.0 is subtracted so that it starts over again at -1.0. When it's writing the sample value into the output,
 			// if it's above 1.0, then it gets reflected.
 
-			double samplesPerTriangleCycle = Global.SampleRate / Frequency;
+			float samplesPerTriangleCycle = Global.SampleRate / Frequency;
 
 			// Along each cycle, we want to count from -1.0 to +3.0, which is an overall change of 4.0.
-			double changePerSample = 4.0 / samplesPerTriangleCycle;
+			float changePerSample = 4.0f / samplesPerTriangleCycle;
 
-			double sampleValue = -1.0;
-
-			for (int i = 0; i < samples.Length; i++)
+			for (int i = 0; i < output.SampleCount; i++)
 			{
 				// Reflect the top half of the sawtooth.
-				if (sampleValue < 1.0)
-					samples[i] = sampleValue;
+				if (_sampleValue < 1.0f)
+					output.Samples[i] = _sampleValue;
 				else
-					samples[i] = 2.0 - sampleValue;
+					output.Samples[i] = 2.0f - _sampleValue;
 
 				// Move along the sawtooth and restart it when we reach the top end.
-				sampleValue += changePerSample;
-				if (sampleValue >= 3.0)
-					sampleValue -= 4.0;
+				_sampleValue += changePerSample;
+				if (_sampleValue >= 3.0f)
+					_sampleValue -= 4.0f;
 			}
-
-			return new Clip(samples);
 		}
 	}
 }

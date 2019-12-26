@@ -5,15 +5,15 @@ namespace Synthesizer
 	public struct EnvelopePoint
 	{
 		public int Index;
-		public double Value;
+		public float Value;
 
-		public EnvelopePoint(int index, double value)
+		public EnvelopePoint(int index, float value)
 		{
 			Index = index;
 			Value = value;
 		}
 
-		public static EnvelopePoint AtTime(double time, double value = 0.0)
+		public static EnvelopePoint AtTime(double time, float value = 0.0f)
 			=> new EnvelopePoint(
 				(int)Math.Round(time * Global.SampleRate),
 				value);

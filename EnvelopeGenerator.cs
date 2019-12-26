@@ -13,7 +13,28 @@ namespace Synthesizer
 		public EnvelopePoint Sustain;
 		public int ReleaseIndex;
 
-		public Clip Generate(int sampleCount)
+		int _sampleIndex;
+
+		public void Reset()
+		{
+			_sampleIndex = 0;
+		}
+
+		public IGenerator Clone()
+		{
+			return
+				new EnvelopeGenerator()
+				{
+					Attack = Attack,
+					Decay = Decay,
+					Sustain = Sustain,
+					ReleaseIndex = ReleaseIndex,
+
+					_sampleIndex = _sampleIndex,
+				};
+		}
+
+		public void Generate(Clip output)
 		{
 			// Try to do something sensible if we're given nonsense to work with. Specifically,
 			// the four points of the envelope need to be in order!
@@ -29,30 +50,30 @@ namespace Synthesizer
 
 			var release = new EnvelopePoint() { Index = ReleaseIndex, Value = 0 };
 
-			var samples = new double[sampleCount];
-
-			for (int i = 0; i < samples.Length; i++)
+			for (int i = 0; i < output.SampleCount; i++)
 			{
+				int index = _sampleIndex++;
+
 				// Figure out which part of the envelope we are in, giving priority to the parts on the right first.
-				if (i > ReleaseIndex)
+				if (index > ReleaseIndex)
 				{
-					samples[i] = 0;
+					output.Samples[i] = 0;
 					continue;
 				}
 
 				EnvelopePoint from, to;
 
-				if (i > Sustain.Index)
+				if (index > Sustain.Index)
 				{
 					from = Sustain;
 					to = release;
 				}
-				else if (i > Decay.Index)
+				else if (index > Decay.Index)
 				{
 					from = Decay;
 					to = Sustain;
 				}
-				else if (i > Attack.Index)
+				else if (index > Attack.Index)
 				{
 					from = Attack;
 					to = Decay;
@@ -64,7 +85,7 @@ namespace Synthesizer
 				}
 
 				if (from.Index == to.Index)
-					samples[i] = to.Value;
+					output.Samples[i] = to.Value;
 				else
 				{
 					// This is called "interpolation", and is the math of drawing a line between the two points.
@@ -74,14 +95,12 @@ namespace Synthesizer
 					// by toWeight, then we end up with a number between those two numbers, where the higher the
 					// weight is, the closer it is to that number.
 
-					double toWeight = (i - from.Index) / (double)(to.Index - from.Index);
-					double fromWeight = 1.0 - toWeight;
+					float toWeight = (index - from.Index) / (float)(to.Index - from.Index);
+					float fromWeight = 1.0f - toWeight;
 
-					samples[i] = from.Value * fromWeight + to.Value * toWeight;
+					output.Samples[i] = from.Value * fromWeight + to.Value * toWeight;
 				}
 			}
-
-			return new Clip(samples);
 		}
 	}
 }

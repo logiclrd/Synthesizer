@@ -8,16 +8,25 @@ namespace Synthesizer
 {
 	public class FlatLineGenerator : IGenerator
 	{
-		public double Value;
+		public float Value;
 
-		public Clip Generate(int sampleCount)
+		public void Reset()
 		{
-			var samples = new double[sampleCount];
+		}
 
-			for (int i = 0; i < samples.Length; i++)
-				samples[i] = Value;
+		public IGenerator Clone()
+		{
+			return
+				new FlatLineGenerator()
+				{
+					Value = Value
+				};
+		}
 
-			return new Clip(samples);
+		public void Generate(Clip output)
+		{
+			for (int i = 0; i < output.SampleCount; i++)
+				output.Samples[i] = Value;
 		}
 	}
 }

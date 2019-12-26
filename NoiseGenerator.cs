@@ -9,17 +9,38 @@ namespace Synthesizer
 	public class NoiseGenerator : IGenerator
 	{
 		public int SoftenPasses = 10;
+		public int Seed = DateTime.UtcNow.Ticks.GetHashCode();
 
-		public Clip Generate(int sampleCount)
+		Random _rnd;
+
+		public void Reset()
 		{
-			Random rnd = new Random();
+			_rnd = null;
+		}
 
-			var samples = new double[sampleCount];
+		public IGenerator Clone()
+		{
+			return
+				new NoiseGenerator()
+				{
+					SoftenPasses = SoftenPasses,
+					Seed = Seed,
+
+					_rnd = Cloner.Clone(_rnd),
+				};
+		}
+
+		public void Generate(Clip output)
+		{
+			if (_rnd == null)
+				_rnd = new Random(Seed);
+
+			var samples = output.Samples;
 
 			for (int i = 0; i < samples.Length; i++)
-				samples[i] = rnd.NextDouble() * 2 - 1;
+				samples[i] = (float)(_rnd.NextDouble() * 2 - 1);
 
-			var tmp = new double[samples.Length];
+			var tmp = new float[samples.Length];
 
 			for (int i = 0; i < SoftenPasses; i++)
 			{
@@ -28,7 +49,7 @@ namespace Synthesizer
 
 				for (int j = 1; j < samples.Length - 1; j++)
 				{
-					tmp[j] = (samples[j - 1] + samples[j] + samples[j + 1]) * 0.333333333333333;
+					tmp[j] = (samples[j - 1] + samples[j] + samples[j + 1]) * 0.333333333333333f;
 				}
 
 				var swap = tmp;
@@ -37,7 +58,7 @@ namespace Synthesizer
 				samples = swap;
 			}
 
-			return new Clip(samples);
+			output.Samples = samples;
 		}
 	}
 }

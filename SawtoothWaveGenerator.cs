@@ -8,12 +8,28 @@ namespace Synthesizer
 {
 	public class SawtoothWaveGenerator : IGenerator
 	{
-		public double Frequency;
+		public float Frequency;
 
-		public Clip Generate(int sampleCount)
+		float _sampleValue = -1.0f;
+
+		public void Reset()
 		{
-			var samples = new double[sampleCount];
+			_sampleValue = -1.0f;
+		}
 
+		public IGenerator Clone()
+		{
+			return
+				new SawtoothWaveGenerator()
+				{
+					Frequency = Frequency,
+
+					_sampleValue = _sampleValue,
+				};
+		}
+
+		public void Generate(Clip output)
+		{
 			// This generates a wave like this:
 			//
 			//    /|  /|  /|
@@ -21,24 +37,20 @@ namespace Synthesizer
 			//     |/  |/  |/
 			//
 
-			double samplesPerCycle = Global.SampleRate / Frequency;
+			float samplesPerCycle = Global.SampleRate / Frequency;
 
 			// Along each cycle, we want to count from -1.0 to +1.0, which is an overall change of 2.0.
-			double changePerSample = 2.0 / samplesPerCycle;
+			float changePerSample = 2.0f / samplesPerCycle;
 
-			double sampleValue = -1.0;
-
-			for (int i = 0; i < samples.Length; i++)
+			for (int i = 0; i < output.SampleCount; i++)
 			{
-				samples[i] = sampleValue;
+				output.Samples[i] = _sampleValue;
 
 				// Move along the sawtooth and restart it when we reach the top end.
-				sampleValue += changePerSample;
-				if (sampleValue >= 1.0)
-					sampleValue -= 2.0;
+				_sampleValue += changePerSample;
+				if (_sampleValue >= 1.0f)
+					_sampleValue -= 2.0f;
 			}
-
-			return new Clip(samples);
 		}
 	}
 }

@@ -26,73 +26,110 @@ namespace Synthesizer
 			InitializeComponent();
 		}
 
-		Clip _clip;
+		IGenerator _output;
 
 		private void cmdGenerate_Click(object sender, RoutedEventArgs e)
 		{
 			// First, create the notes that we want.
-			var note1TriangleWave = new TriangleWaveGenerator();
+			var note1Wave = new SineWaveGenerator();
 
-			note1TriangleWave.Frequency = Constants.ABelowMiddleC;
+			note1Wave.Frequency = Constants.MiddleC;
 
-			var note2TriangleWave = new TriangleWaveGenerator();
+			var note2Wave = new SineWaveGenerator();
 
-			note2TriangleWave.Frequency = note1TriangleWave.Frequency * Constants.SemitoneRatio * Constants.SemitoneRatio * Constants.SemitoneRatio * Constants.SemitoneRatio;
+			note2Wave.Frequency = note1Wave.Frequency * Constants.SemitoneRatio * Constants.SemitoneRatio * Constants.SemitoneRatio * Constants.SemitoneRatio;
 
-			var note3TriangleWave = new TriangleWaveGenerator();
+			var note3Wave = new SineWaveGenerator();
 
-			note3TriangleWave.Frequency = note2TriangleWave.Frequency * Constants.SemitoneRatio * Constants.SemitoneRatio * Constants.SemitoneRatio;
+			note3Wave.Frequency = note2Wave.Frequency * Constants.SemitoneRatio * Constants.SemitoneRatio * Constants.SemitoneRatio;
 
 			// Next, give these notes a "shape", rather than just being on at max volume all the time.
 			var envelope = new EnvelopeGenerator();
 
-			envelope.Attack = EnvelopePoint.AtTime(0.025, 1.0);
-			envelope.Decay = EnvelopePoint.AtTime(0.2, 0.65);
-			envelope.Sustain = EnvelopePoint.AtTime(1.0, 0.45);
-			envelope.ReleaseIndex = EnvelopePoint.AtTime(1.5).Index;
+			envelope.Attack = EnvelopePoint.AtTime(0.025, 1.0f);
+			envelope.Decay = EnvelopePoint.AtTime(0.1, 0.65f);
+			envelope.Sustain = EnvelopePoint.AtTime(0.3, 0.45f);
+			envelope.ReleaseIndex = EnvelopePoint.AtTime(0.5).Index;
 
 			// Now, apply the envelope to each note.
 			var note1Convolution =
 				new ConvolutionGenerator()
 				{
-					First = note1TriangleWave,
-					Second = envelope,
+					First = note1Wave,
+					Second = envelope.Clone(),
 				};
 
 			var note2Convolution =
 				new ConvolutionGenerator()
 				{
-					First = note2TriangleWave,
-					Second = envelope,
+					First = note2Wave,
+					Second = envelope.Clone(),
 				};
 
 			var note3Convolution =
 				new ConvolutionGenerator()
 				{
-					First = note3TriangleWave,
-					Second = envelope,
+					First = note3Wave,
+					Second = envelope.Clone(),
+				};
+
+			// REpeat them in a pattern.
+			var note1Repeater =
+				new RepeaterGenerator()
+				{
+					RepeatAfterSamples = Global.SampleRate * 2 / 2,
+					Source = note1Convolution,
+				};
+
+			var note2Repeater =
+				new RepeaterGenerator()
+				{
+					RepeatAfterSamples = Global.SampleRate * 2 / 3,
+					Source = note2Convolution,
+				};
+
+			var note3Repeater =
+				new RepeaterGenerator()
+				{
+					RepeatAfterSamples = Global.SampleRate * 2 / 5,
+					Source = note3Convolution,
 				};
 
 			// Now mix them together.
 			var mix = new MixGenerator();
 
-			mix.Inputs.Add(note1Convolution);
-			mix.Inputs.Add(note2Convolution);
-			mix.Inputs.Add(note3Convolution);
+			mix.Inputs.Add(note1Repeater);
+			mix.Inputs.Add(note2Repeater);
+			mix.Inputs.Add(note3Repeater);
 
 			// Finally, reduce the volume of these notes, because three of them at maximum volume mixed together will be louder than the maximum volume can handle.
 			var volume = new FlatLineGenerator();
 
-			volume.Value = 0.3;
+			volume.Value = 0.3f;
 
-			var output = new ConvolutionGenerator();
+			_output =
+				new ConvolutionGenerator()
+				{
+					First = mix,
+					Second = volume,
+				};
 
-			output.First = mix;
-			output.Second = volume;
+			var clip = new Clip(Global.SampleRate * 2);
 
-			_clip = output.Generate(Global.SampleRate * 2);
+			//_output.Generate(clip);
 
-			cvVisualizer.Clip = _clip;
+			var subclip = new Clip(Global.SampleRate / 4);
+
+			for (int i = 0; i < 8; i++)
+			{
+				_output.Generate(subclip);
+
+				clip.WriteSamples(i * subclip.SampleCount, subclip.Samples);
+			}
+
+			cvVisualizer.Clip = clip;
+
+			_output.Reset();
 		}
 
 		IWavePlayer _outputter;
@@ -108,11 +145,11 @@ namespace Synthesizer
 				catch { }
 			}
 
-			if (_clip != null)
+			if (_output != null)
 			{
 				_outputter = new WaveOut();
 
-				_outputter.Init(_clip.GetWaveProvider());
+				_outputter.Init(new GeneratorSampleProvider(_output));
 				_outputter.Play();
 			}
 		}
