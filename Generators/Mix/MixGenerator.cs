@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Synthesizer
+namespace Synthesizer.Generators.Mix
 {
 	public class MixGenerator : IGenerator
 	{

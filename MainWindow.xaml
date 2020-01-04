@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Synthesizer"
+        xmlns:controls="clr-namespace:Synthesizer.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Hidden">
-            <local:ClipVisualizer x:Name="cvVisualizer" Height="50" ScaleY="25" />
+            <controls:ClipVisualizer x:Name="cvVisualizer" Height="50" ScaleY="25" />
         </ScrollViewer>
         <Button Name="cmdGenerate" Click="cmdGenerate_Click">Generate</Button>
         <Button Name="cmdPlay" Click="cmdPlay_Click">Play</Button>

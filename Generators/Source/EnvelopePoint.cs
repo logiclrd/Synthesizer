@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Synthesizer
+namespace Synthesizer.Generators.Source
 {
 	public struct EnvelopePoint
 	{

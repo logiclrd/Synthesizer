@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="Synthesizer.Controls.GeneratorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Synthesizer.Controls"
+             Background="LightBlue">
+    <UserControl.Template>
+        <ControlTemplate TargetType="local:GeneratorControl">
+            <Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="15" />
+                    </Grid.ColumnDefinitions>
+
+                    <Rectangle Fill="{TemplateBinding Background}" Grid.ColumnSpan="3">
+                        <Rectangle.Clip>
+                            <PathGeometry Figures="M0 14.09 14.09 0 10000 0 10000 10000 0.707 10000" />
+                        </Rectangle.Clip>
+                    </Rectangle>
+
+                    <ContentPresenter Grid.Column="1" Margin="0 8" />
+                </Grid>
+
+                <Grid Opacity="0.3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="15" />
+                    </Grid.ColumnDefinitions>
+
+                    <Path Data="M0.707 14.86 14.86 0.707 16 1" StrokeThickness="2" Stroke="Black" />
+                    <Rectangle Width="Auto" Height="2" Grid.Column="1" Fill="Black" VerticalAlignment="Top" />
+                    <Rectangle Width="Auto" Height="2" Grid.Column="2" Fill="Black" VerticalAlignment="Top" />
+                    <Rectangle Width="2" Height="Auto" Grid.Column="2" Fill="Black" HorizontalAlignment="Right" />
+                    <Rectangle Width="Auto" Height="2" Grid.Column="2" Fill="Black" VerticalAlignment="Bottom" />
+                    <Rectangle Width="Auto" Height="2" Grid.Column="1" Fill="Black" VerticalAlignment="Bottom" />
+                    <Rectangle Width="Auto" Height="2" Grid.Column="0" Fill="Black" VerticalAlignment="Bottom" />
+                    <Rectangle Width="2" Height="Auto" Grid.Column="0" Fill="Black" HorizontalAlignment="Left">
+                        <Rectangle.Clip>
+                            <RectangleGeometry Rect="0 14.18 2 100000" />
+                        </Rectangle.Clip>
+                    </Rectangle>
+                </Grid>
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Template>
+    <Label>Testing</Label>
+</UserControl>

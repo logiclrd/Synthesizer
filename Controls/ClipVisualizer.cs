@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Synthesizer
+namespace Synthesizer.Controls
 {
 	class ClipVisualizer : Control
 	{

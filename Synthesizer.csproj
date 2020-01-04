@@ -57,21 +57,29 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Clip.cs" />
-    <Compile Include="ClipVisualizer.cs" />
+    <Compile Include="Controls\ClipVisualizer.cs" />
     <Compile Include="Cloner.cs" />
-    <Compile Include="GeneratorSampleProvider.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="ConvolutionGenerator.cs" />
-    <Compile Include="EnvelopeGenerator.cs" />
-    <Compile Include="EnvelopePoint.cs" />
+    <Compile Include="GeneratorSampleProvider.cs" />
+    <Compile Include="Generators\Mix\ConvolutionGenerator.cs" />
+    <Compile Include="Generators\Sequence\RepeaterGenerator.cs" />
+    <Compile Include="Generators\Source\EnvelopeGenerator.cs" />
+    <Compile Include="Generators\Source\EnvelopePoint.cs" />
+    <Compile Include="Controls\GeneratorControl.xaml.cs">
+      <DependentUpon>GeneratorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Generators\Source\SquareWaveGenerator.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="MixGenerator.cs" />
-    <Compile Include="NoiseGenerator.cs" />
-    <Compile Include="RepeaterGenerator.cs" />
-    <Compile Include="SawtoothWaveGenerator.cs" />
-    <Compile Include="SineWaveGenerator.cs" />
-    <Compile Include="TriangleWaveGenerator.cs" />
-    <Compile Include="FlatLineGenerator.cs" />
+    <Compile Include="Generators\Mix\MixGenerator.cs" />
+    <Compile Include="Generators\Source\NoiseGenerator.cs" />
+    <Compile Include="Generators\Source\SawtoothWaveGenerator.cs" />
+    <Compile Include="Generators\Source\SineWaveGenerator.cs" />
+    <Compile Include="Generators\Source\TriangleWaveGenerator.cs" />
+    <Compile Include="Generators\Source\FlatLineGenerator.cs" />
+    <Page Include="Controls\GeneratorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -80,7 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IGenerator.cs" />
+    <Compile Include="Generators\IGenerator.cs" />
     <Compile Include="INotifyChanged.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -105,6 +113,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include=".editorconfig">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -120,6 +131,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generators\Filter\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
