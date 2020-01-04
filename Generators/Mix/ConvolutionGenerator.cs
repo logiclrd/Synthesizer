@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Synthesizer.Generators.Mix
 {
-	public class ConvolutionGenerator : IGenerator
+	public class ConvolutionGenerator : GeneratorBase
 	{
 		public IGenerator First;
 		public IGenerator Second;
 
-		public void Reset()
+		public override void Reset()
 		{
 			First?.Reset();
 			Second?.Reset();
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new ConvolutionGenerator()
@@ -27,7 +27,7 @@ namespace Synthesizer.Generators.Mix
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			// A "convolution" is what you get when you have two sets of numbers that are of the same size,
 			// and you go through them pairing up the numbers, multiplying each pair together, to make a

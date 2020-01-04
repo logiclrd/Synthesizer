@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Synthesizer.Generators.Sequence
 {
-	public class RepeaterGenerator : IGenerator
+	public class RepeaterGenerator : GeneratorBase
 	{
 		public int RepeatAfterSamples;
 		public int FadeOutBeforeRepeatSampleCount = 125;
@@ -14,12 +14,12 @@ namespace Synthesizer.Generators.Sequence
 
 		int _sampleIndex;
 
-		public void Reset()
+		public override void Reset()
 		{
 			_sampleIndex = 0;
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 					new RepeaterGenerator()
@@ -31,7 +31,7 @@ namespace Synthesizer.Generators.Sequence
 					};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			int samplesUntilRepeat = RepeatAfterSamples - _sampleIndex;
 

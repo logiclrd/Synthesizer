@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace Synthesizer.Generators.Mix
 {
-	public class MixGenerator : IGenerator
+	public class MixGenerator : GeneratorBase
 	{
 		public List<IGenerator> Inputs = new List<IGenerator>();
 
-		public void Reset()
+		public override void Reset()
 		{
 			Inputs.ForEach(input => input.Reset());
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			var clone = new MixGenerator();
 
@@ -22,7 +22,7 @@ namespace Synthesizer.Generators.Mix
 			return clone;
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			var buffer = Clip.SameSizeAs(output);
 

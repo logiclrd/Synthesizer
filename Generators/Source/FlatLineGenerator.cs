@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Synthesizer.Generators.Source
 {
-	public class FlatLineGenerator : IGenerator
+	public class FlatLineGenerator : GeneratorBase
 	{
 		public float Value;
 
-		public void Reset()
+		public override void Reset()
 		{
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new FlatLineGenerator()
@@ -23,7 +23,7 @@ namespace Synthesizer.Generators.Source
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			for (int i = 0; i < output.SampleCount; i++)
 				output.Samples[i] = Value;

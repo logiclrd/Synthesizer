@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Synthesizer.Generators.Source
 {
-	public class EnvelopeGenerator : IGenerator
+	public class EnvelopeGenerator : GeneratorBase
 	{
 		public EnvelopePoint Attack;
 		public EnvelopePoint Decay;
@@ -15,12 +15,12 @@ namespace Synthesizer.Generators.Source
 
 		int _sampleIndex;
 
-		public void Reset()
+		public override void Reset()
 		{
 			_sampleIndex = 0;
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new EnvelopeGenerator()
@@ -34,7 +34,7 @@ namespace Synthesizer.Generators.Source
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			// Try to do something sensible if we're given nonsense to work with. Specifically,
 			// the four points of the envelope need to be in order!

@@ -2,18 +2,18 @@
 
 namespace Synthesizer.Generators.Source
 {
-	public class TriangleWaveGenerator : IGenerator
+	public class TriangleWaveGenerator : GeneratorBase
 	{
 		public float Frequency;
 
 		float _sampleValue = 0;
 
-		public void Reset()
+		public override void Reset()
 		{
 			_sampleValue = 0;
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new TriangleWaveGenerator()
@@ -24,7 +24,7 @@ namespace Synthesizer.Generators.Source
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			// This generates a wave like this:
 			//

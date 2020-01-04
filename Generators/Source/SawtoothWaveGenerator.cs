@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Synthesizer.Generators.Source
 {
-	public class SawtoothWaveGenerator : IGenerator
+	public class SawtoothWaveGenerator : GeneratorBase
 	{
 		public float Frequency;
 
 		float _sampleValue = -1.0f;
 
-		public void Reset()
+		public override void Reset()
 		{
 			_sampleValue = -1.0f;
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new SawtoothWaveGenerator()
@@ -28,7 +28,7 @@ namespace Synthesizer.Generators.Source
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			// This generates a wave like this:
 			//

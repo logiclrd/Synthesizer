@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace Synthesizer.Generators.Source
 {
-	public class NoiseGenerator : IGenerator
+	public class NoiseGenerator : GeneratorBase
 	{
 		public int SoftenPasses = 10;
 		public int Seed = DateTime.UtcNow.Ticks.GetHashCode();
 
 		Random _rnd;
 
-		public void Reset()
+		public override void Reset()
 		{
 			_rnd = null;
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new NoiseGenerator()
@@ -30,7 +30,7 @@ namespace Synthesizer.Generators.Source
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			if (_rnd == null)
 				_rnd = new Random(Seed);

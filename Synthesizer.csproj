@@ -57,17 +57,21 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Clip.cs" />
+    <Compile Include="Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="Controls\ClipVisualizer.cs" />
     <Compile Include="Cloner.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Controls\GeneratorControl.xaml.cs">
+      <DependentUpon>GeneratorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GeneratorControlIsSelectedBorderOpacityConverter.cs" />
+    <Compile Include="Controls\InputConnector.cs" />
     <Compile Include="GeneratorSampleProvider.cs" />
+    <Compile Include="Generators\GeneratorBase.cs" />
     <Compile Include="Generators\Mix\ConvolutionGenerator.cs" />
     <Compile Include="Generators\Sequence\RepeaterGenerator.cs" />
     <Compile Include="Generators\Source\EnvelopeGenerator.cs" />
     <Compile Include="Generators\Source\EnvelopePoint.cs" />
-    <Compile Include="Controls\GeneratorControl.xaml.cs">
-      <DependentUpon>GeneratorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Generators\Source\SquareWaveGenerator.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Generators\Mix\MixGenerator.cs" />

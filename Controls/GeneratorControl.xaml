@@ -1,49 +1,68 @@
 ﻿<UserControl x:Class="Synthesizer.Controls.GeneratorControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Synthesizer.Controls"
-             Background="LightBlue">
-    <UserControl.Template>
-        <ControlTemplate TargetType="local:GeneratorControl">
-            <Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="15" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="15" />
-                    </Grid.ColumnDefinitions>
+             xmlns:local="clr-namespace:Synthesizer.Controls">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" x:Name="cdRealInputColumn" MinWidth="15" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="15" />
+            </Grid.ColumnDefinitions>
 
-                    <Rectangle Fill="{TemplateBinding Background}" Grid.ColumnSpan="3">
-                        <Rectangle.Clip>
-                            <PathGeometry Figures="M0 14.09 14.09 0 10000 0 10000 10000 0.707 10000" />
-                        </Rectangle.Clip>
-                    </Rectangle>
+            <Rectangle Fill="{Binding Colour}" Grid.ColumnSpan="3">
+                <Rectangle.Clip>
+                    <PathGeometry Figures="M0 14.09 14.09 0 10000 0 10000 10000 0.707 10000" />
+                </Rectangle.Clip>
+            </Rectangle>
 
-                    <ContentPresenter Grid.Column="1" Margin="0 8" />
-                </Grid>
+            <StackPanel Grid.Column="1" Margin="8">
+                <Label Content="{Binding GeneratorName}" Padding="0" FontSize="14" FontWeight="DemiBold" />
+                <Label Content="{Binding GeneratorType}" Padding="0" Foreground="#777" FontSize="10" FontFamily="Consolas" />
+            </StackPanel>
 
-                <Grid Opacity="0.3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="15" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="15" />
-                    </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="3 16 0 0">
+                <ItemsControl ItemsSource="{Binding InputConnectors}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Path Height="12" Fill="Black" Data="M0 2 9 6 0 10 z" />
+                                <TextBlock Margin="2 0" Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                    <Path Data="M0.707 14.86 14.86 0.707 16 1" StrokeThickness="2" Stroke="Black" />
-                    <Rectangle Width="Auto" Height="2" Grid.Column="1" Fill="Black" VerticalAlignment="Top" />
-                    <Rectangle Width="Auto" Height="2" Grid.Column="2" Fill="Black" VerticalAlignment="Top" />
-                    <Rectangle Width="2" Height="Auto" Grid.Column="2" Fill="Black" HorizontalAlignment="Right" />
-                    <Rectangle Width="Auto" Height="2" Grid.Column="2" Fill="Black" VerticalAlignment="Bottom" />
-                    <Rectangle Width="Auto" Height="2" Grid.Column="1" Fill="Black" VerticalAlignment="Bottom" />
-                    <Rectangle Width="Auto" Height="2" Grid.Column="0" Fill="Black" VerticalAlignment="Bottom" />
-                    <Rectangle Width="2" Height="Auto" Grid.Column="0" Fill="Black" HorizontalAlignment="Left">
-                        <Rectangle.Clip>
-                            <RectangleGeometry Rect="0 14.18 2 100000" />
-                        </Rectangle.Clip>
-                    </Rectangle>
-                </Grid>
-            </Grid>
-        </ControlTemplate>
-    </UserControl.Template>
-    <Label>Testing</Label>
+                <TextBlock Text="..." Visibility="{Binding IsDynamicInputCount, Converter={local:BooleanToVisibilityConverter}}" />
+            </StackPanel>
+
+            <Path Grid.Column="2" Height="12" Fill="Black" Data="M0 2 9 6 0 10 z" Margin="3" VerticalAlignment="Top" />
+        </Grid>
+
+        <Grid Opacity="{Binding IsSelected, Converter={local:GeneratorControlIsSelectedBorderOpacityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="cdBorderOverlayInputColumn" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="15" />
+            </Grid.ColumnDefinitions>
+
+            <Path Data="M0.707 14.86 14.86 0.707" StrokeThickness="2" Stroke="Black" />
+            <Rectangle Width="Auto" Height="2" Grid.Column="0" Fill="Black" VerticalAlignment="Top">
+                <Rectangle.Clip>
+                    <RectangleGeometry Rect="14.18 0 100000 2" />
+                </Rectangle.Clip>
+            </Rectangle>
+            <Rectangle Width="Auto" Height="2" Grid.Column="1" Fill="Black" VerticalAlignment="Top" />
+            <Rectangle Width="Auto" Height="2" Grid.Column="2" Fill="Black" VerticalAlignment="Top" />
+            <Rectangle Width="2" Height="Auto" Grid.Column="2" Fill="Black" HorizontalAlignment="Right" />
+            <Rectangle Width="Auto" Height="2" Grid.Column="2" Fill="Black" VerticalAlignment="Bottom" />
+            <Rectangle Width="Auto" Height="2" Grid.Column="1" Fill="Black" VerticalAlignment="Bottom" />
+            <Rectangle Width="Auto" Height="2" Grid.Column="0" Fill="Black" VerticalAlignment="Bottom" />
+            <Rectangle Width="2" Height="Auto" Grid.Column="0" Fill="Black" HorizontalAlignment="Left">
+                <Rectangle.Clip>
+                    <RectangleGeometry Rect="0 14.18 2 100000" />
+                </Rectangle.Clip>
+            </Rectangle>
+        </Grid>
+    </Grid>
 </UserControl>

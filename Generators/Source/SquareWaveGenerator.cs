@@ -2,20 +2,20 @@
 
 namespace Synthesizer.Generators.Source
 {
-	public class SquareWaveGenerator : IGenerator
+	public class SquareWaveGenerator : GeneratorBase
 	{
 		public double Frequency;
 
 		double _sampleIndex = 0.0;
 		float _phase = 1.0f;
 
-		public void Reset()
+		public override void Reset()
 		{
 			_sampleIndex = 0.0;
 			_phase = 1.0f;
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new SquareWaveGenerator()
@@ -27,7 +27,7 @@ namespace Synthesizer.Generators.Source
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			double samplesPerPhase = Global.SampleRate / (Frequency * 2.0);
 

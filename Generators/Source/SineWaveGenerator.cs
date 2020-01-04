@@ -2,18 +2,18 @@
 
 namespace Synthesizer.Generators.Source
 {
-	public class SineWaveGenerator : IGenerator
+	public class SineWaveGenerator : GeneratorBase
 	{
 		public double Frequency;
 
 		double _sinePhase = 0.0;
 
-		public void Reset()
+		public override void Reset()
 		{
 			_sinePhase = 0;
 		}
 
-		public IGenerator Clone()
+		public override IGenerator Clone()
 		{
 			return
 				new SineWaveGenerator()
@@ -24,7 +24,7 @@ namespace Synthesizer.Generators.Source
 				};
 		}
 
-		public void Generate(Clip output)
+		public override void Generate(Clip output)
 		{
 			double samplesPerSineWavePeriod = Global.SampleRate / Frequency;
 
